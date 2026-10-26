@@ -1035,3 +1035,97 @@ I think you are taking the correct approach.  Please proceed with the next step.
 
 
 - *Ran: Check branch, files, books.csv, database, and the summary text*
+- *Exported this session's transcript*
+- *Ran: Build the final transcript.md from the new export and scan it*
+- *Ran: Commit all deliverables to the assignment branch*
+
+The commit is saved: 7 files. Next I'll **push**, which uploads the `assignment` branch to GitHub. Only that branch goes up; `main` is untouched.
+
+
+- *Ran: Push the assignment branch to GitHub*
+
+Pushed. Next I'll ask GitHub which files are on the `assignment` branch, and confirm that `main` still holds only the README.
+
+
+- *Ran: List files on GitHub for both branches and check visibility*
+
+The shell misread the `?` in the web address as a filename pattern. I'll put quotes around it and run it again.
+
+
+- *Ran: List files on GitHub for both branches*
+
+All your work is now on GitHub, on the `assignment` branch.
+
+## What was done
+1. **Checked everything before committing:**
+   - all files present
+   - `books.csv` still matches the original download
+   - database integrity `ok` (25 books, 12 loans)
+   - your summary edits in place
+2. **Rebuilt `transcript.md`** from a fresh export, covering all 23 of your messages, then scanned it for private details. It was clean.
+3. **Committed** the 7 files as one snapshot on the `assignment` branch.
+4. **Pushed** the branch to GitHub, and confirmed what's there:
+
+| Branch | Files |
+|---|---|
+| `assignment` | README.md, books.csv, books_25_clean.csv, library.db, schema.sql, erd.png, summary.md, transcript.md |
+| `main` | README.md only (not merged, as the assignment requires) |
+
+## Your remaining steps
+1. **Check on GitHub:** open https://github.com/jkdries/week2-assignment/tree/assignment and confirm the files are there. Click `summary.md` to see that the ERD shows at the top.
+2. **Submit that same link in Canvas.**
+
+## Before you submit, two things to know
+- **The many-to-many relationship still isn't in your summary.** The assignment asks for it by name. Your summary now describes the three one-to-many links correctly, but not the many-to-many: members ↔ copies, connected through the loans table. A sentence or two would cover it.
+- **Two small typos** were added in the Dewey paragraph: "only able to find ... for only 17", and "Dewey Decimal information similar titles", which is missing the word "for".
+
+The assignment allows unlimited attempts, so updating is easy. Edit `summary.md`, then ask me to commit and push again. I'll also refresh `transcript.md` so it includes the rest of our conversation, since the current version stops at your "Please proceed" message.
+
+---
+
+### Me (2026-10-26 19:57 UTC)
+
+Please explain the many-to-many relationship that you say exists between the members and copies tables.  There is only one member record per person in the members table.  So how could there be a many-to-many relationship?
+
+### Claude
+
+Your point is correct, and it's the key to the idea: **each member appears exactly once in `members`, and each copy appears exactly once in `copies`.** "Many-to-many" doesn't mean duplicate records. It describes how many records **on the other side** each record can be connected to.
+
+## The two questions to ask
+- **How many copies can one member be connected to?** Many. Maria has borrowed *To Kill a Mockingbird* (LIB-0004), *Pride and Prejudice* (LIB-0010) and *The Hobbit* (LIB-0007).
+- **How many members can one copy be connected to?** Many. Copy LIB-0004 (*To Kill a Mockingbird*) was borrowed by Maria in August and by Robert in September.
+
+"Many" on both sides makes it many-to-many. Compare **books → copies**: one book can have many copies, but each copy belongs to only *one* book. That makes it one-to-many.
+
+## Why it needs the loans table
+Suppose you tried to link members and copies directly:
+- Put a `barcode` column in `members`: Maria's row would have room for only **one** book.
+- Put a `member_id` column in `copies`: LIB-0004's row would have room for only **one** borrower, and Robert's loan would overwrite Maria's history.
+
+Neither table can hold the relationship on its own. So the database adds a **linking table** (also called a junction table) in between. `loans` holds **one row per pairing**:
+
+| loan | member | copy |
+|---|---|---|
+| 1 | Maria | LIB-0004 |
+| 4 | Maria | LIB-0010 |
+| 7 | Robert | LIB-0004 |
+| 11 | Maria | LIB-0007 |
+
+Maria and LIB-0004 each still have exactly one record in their own tables. Only the *pairings* repeat, and each pairing also carries its own dates.
+
+## How it appears in your ERD
+A many-to-many relationship is drawn as **two one-to-many lines meeting at the linking table**: `members → loans ← copies`. That's why your three one-to-many descriptions are correct, and the many-to-many is what two of them add up to.
+
+## One nuance
+At any **single moment**, a copy can be with only one member; your database enforces this with the "can't be checked out twice" rule. Many-to-many describes the relationship **over time**, which is what your answer #2 asked for: "current and historical borrowing information."
+
+---
+
+### Me (2026-10-26 20:08 UTC)
+
+I made the edits to the summary.md file.  Please review and make the appropriate repo updates as needed.
+
+### Claude
+
+
+- *Ran: Show what changed in summary.md since the last commit*

@@ -86,6 +86,8 @@ barcode - This data value is a unique identifier tied to the physical copy of th
 
 member_id - This data value is a unique identifier for each person who is or was a member able to check out books.  This data field has a one-to-many relationship to the Loans table since a single person is able to check out more than one book at a time.
 
+If you take historical check out records into consideration, there could also be a many-to-many relationship between the Members and Copies data tables since both of those tables connect to the Loans data table.
+
 
 There were several design decisions that I instructed Claude Code to take into consideration:
 
@@ -93,7 +95,7 @@ There were several design decisions that I instructed Claude Code to take into c
 
 2. Claude suggested that a separate table for Author information be created as well in the database.  After thinking about how the data in the Author table would be used, I told Claude not to create a separate Author table.  The reason is that the author information should be tied directly to the book information.  Adding a separate data table just for author information would be adding additional complexity to the design of the database without adding any additional value.  This added complexity also creates another source of potential errors which could impact the operations of the database.
 
-3. The books.csv file did not contain the Dewey Decimal information for the books in its data set.  Since this is an additional valid way of identifying and searching for books, I asked Claude to research and find the Dewey Decimal information for each of the titles, and then add that information to the books_25_clean.csv file.  Claude had to go to the Library of Congress to get that information for our data set.  Claude was only able to find the Dewey Decimal information for only 17 out of the 25 book titles.  Claude determined the Dewey Decimal information for the remaining titles by looking for Dewey Decimal information similar titles in the same series from the author. 
+3. The books.csv file did not contain the Dewey Decimal information for the books in its data set.  Since this is an additional valid way of identifying and searching for books, I asked Claude to research and find the Dewey Decimal information for each of the titles, and then add that information to the books_25_clean.csv file.  Claude had to go to the Library of Congress to get that information for our data set.  Claude was only able to find the Dewey Decimal information for only 17 out of the 25 book titles.  Claude determined the Dewey Decimal information for the remaining titles by looking for Dewey Decimal information for similar titles in the same series from the author. 
 
 
 As far as errors were concerned, I did notice that Claude listed the dates in the database in a text format.  I asked Claude about changing the date field into a date format so that mathematical operations could be performed against the dates.  Claude confirmed that even in the text format that the mathematical operations were still able to be done.  However, Claude did point out that the dates could be entered into the database in a number of different date formats.  In order to ensure consistency in the date formats, I asked Claude to add some date formatting rules to the database.
